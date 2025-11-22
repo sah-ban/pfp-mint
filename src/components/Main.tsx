@@ -91,7 +91,7 @@ export default function MintPfp() {
           abi,
           functionName: "mint",
           args: [BigInt(context.user.fid), context.user.pfpUrl],
-          value: parseEther("0.0003"),
+          value: parseEther("0.00036"),
           chainId: base.id,
         });
       } catch {
