@@ -19,7 +19,6 @@ export async function GET() {
       splashBackgroundColor: "#333333",
       description: "turn your pfp into an nft",
       primaryCategory: "utility",
-      castShareUrl: appUrl,
       webhookUrl: `${appUrl}/api/webhook`,
     },
     baseBuilder: {
