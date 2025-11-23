@@ -46,13 +46,14 @@ export default function MintPfp() {
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({ hash });
 
-  const { data: alreadyMinted } = useReadContract({
+  const { data } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi,
     functionName: "isMinted",
     args: [BigInt(context?.user.fid || 0)],
     chainId: base.id,
   });
+  const alreadyMinted = Boolean(data);
 
   const handleMint = async () => {
     setIsClicked(true);
@@ -71,17 +72,6 @@ export default function MintPfp() {
 
         if (!context?.user.fid || !context.user.pfpUrl) {
           alert("No valid FID or PFP found.");
-          return;
-        }
-
-        if (isConfirmed) {
-          sdk.actions.composeCast({
-            text: "Just turned my PFP into an onchain NFT 😤💎\nImmutable. Ownable. Forever mine.\nMint yours now!",
-            embeds: [
-              `${process.env.NEXT_PUBLIC_URL}`,
-              `https://opensea.io/item/base/${CONTRACT_ADDRESS}/${context.user.fid}`,
-            ],
-          });
           return;
         }
 
@@ -174,10 +164,13 @@ export default function MintPfp() {
           </div>
         </div>
       </div>
-      {!alreadyMinted && (
+
+      <div className="flex flex-col rounded-xl overflow-hidden border text-black bg-white">
+        {/* Button 1 */}
         <button
           onClick={handleMint}
-          className="text-black bg-white text-center py-2 rounded-xl font-semibold text-lg shadow-lg relative overflow-hidden transform transition-all duration-200 hover:scale-110 active:scale-95 flex items-center justify-center gap-2 mb-4 cursor-pointer"
+          disabled={alreadyMinted || isConfirmed || isPending || isConfirming}
+          className="text-center py-2 font-semibold text-lg shadow-lg relative overflow-hidden transform transition-all duration-200 hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer"
         >
           <div
             className={`absolute inset-0 bg-gray-600 transition-all duration-500 ${
@@ -214,6 +207,8 @@ export default function MintPfp() {
                 ? "Minting..."
                 : isConfirmed
                 ? "Minted!, Caste It!"
+                : alreadyMinted
+                ? "Already Minted"
                 : "Mint Your PFP"}
             </span>
             <svg
@@ -232,19 +227,35 @@ export default function MintPfp() {
             </svg>{" "}
           </div>
         </button>
-      )}
-      {(alreadyMinted || isConfirmed) && (
-        <button
-          className="bg-white text-black font-bold px-4 py-3 rounded-xl text-lg transition cursor-pointer flex items-center"
-          onClick={() =>
-            sdk.actions.openUrl(
-              `https://opensea.io/item/base/${CONTRACT_ADDRESS}/${context?.user.fid}`
-            )
-          }
-        >
-          Already Minted, View on OpenSea
-        </button>
-      )}
+        {(alreadyMinted || isConfirmed)  && (
+          <div className="flex w-full">
+            <button
+              className="font-bold px-4 py-3 text-lg transition cursor-pointer flex items-center justify-center w-1/2 border-r"
+              onClick={() =>
+                sdk.actions.composeCast({
+                  text: "I turned my PFP into an onchain NFT 😤💎\nImmutable. Ownable. Forever mine.\nMint yours now!",
+                  embeds: [
+                    `${process.env.NEXT_PUBLIC_URL}`,
+                    `https://opensea.io/item/base/${CONTRACT_ADDRESS}/${context.user.fid}`,
+                  ],
+                })
+              }
+            >
+              Cast it!
+            </button>
+            <button
+              className="font-bold px-4 py-3 text-lg transition cursor-pointer flex items-center justify-center w-1/2"
+              onClick={() =>
+                sdk.actions.openUrl(
+                  `https://opensea.io/item/base/${CONTRACT_ADDRESS}/${context?.user.fid}`
+                )
+              }
+            >
+              OpenSea
+            </button>
+          </div>
+        )}
+      </div>
       {/* Mint Button */}
       <div className="w-full max-w-sm pb-10">
         <p className="text-center text-purple-300 text-xs mt-4">
