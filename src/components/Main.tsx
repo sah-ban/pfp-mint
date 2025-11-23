@@ -206,7 +206,7 @@ export default function MintPfp() {
                 : isConfirming
                 ? "Minting..."
                 : isConfirmed
-                ? "Minted!, Caste It!"
+                ? "Minted!"
                 : alreadyMinted
                 ? "Already Minted"
                 : "Mint Your PFP"}
