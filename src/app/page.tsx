@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
         name: "PFP → NFT",
         url: `${appUrl}`,
         splashImageUrl: `${appUrl}/splash.png`,
-        splashBackgroundColor: "#333333",
+        splashBackgroundColor: "#f5f1ea",
       },
     },
   };

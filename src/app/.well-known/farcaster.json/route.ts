@@ -16,7 +16,7 @@ export async function GET() {
       homeUrl: appUrl,
       buttonTitle: "mint your pfp",
       splashImageUrl: `${appUrl}/splash.png`,
-      splashBackgroundColor: "#333333",
+      splashBackgroundColor: "#f5f1ea",
       description: "turn your pfp into an nft",
       primaryCategory: "utility",
       webhookUrl: `${appUrl}/api/webhook`,
