@@ -1,132 +1,111 @@
-# GIF – A Farcaster Mini App to search and add GIFs to casts
+# PFP → NFT
 
-This is a **Mini App** built for [**Farcaster**](https://farcaster.xyz), a decentralized social media protocol to add **GIFs** to Posts
+A [Farcaster miniapp](https://pfp.itscashless.com) that lets you mint your profile picture as a unique **1/1 ERC-721 NFT** on **Base** — in one tap.
 
-## Features
+## ✨ Features
 
-- Displays Trending GIFs
-- Search GIFs by keywords
-- One click to Post
-- Use Share extension to Reply and Quote 
+- **One-tap minting** — Connect wallet and mint your Farcaster PFP as an on-chain NFT
+- **1/1 unique tokens** — Each NFT is tied to your Farcaster ID (FID), so no duplicates
+- **On-chain metadata** — Dynamic metadata API serves name, image, traits, and mint date
+- **Post-mint actions** — Cast about your mint or view it on OpenSea directly from the app
+- **Haptic feedback** — Native vibration on successful mint for a satisfying UX
 
+## 🛠 Tech Stack
 
-![og](public/og.gif)
+| Layer          | Technology                                                                     |
+| -------------- | ------------------------------------------------------------------------------ |
+| Framework      | [Next.js 15](https://nextjs.org/) (App Router)                                 |
+| Language       | TypeScript                                                                     |
+| Styling        | [Tailwind CSS 4](https://tailwindcss.com/)                                     |
+| Blockchain     | [wagmi](https://wagmi.sh/) + [viem](https://viem.sh/)                          |
+| Data Fetching  | [TanStack React Query](https://tanstack.com/query)                             |
+| Farcaster      | [@farcaster/miniapp-sdk](https://www.npmjs.com/package/@farcaster/miniapp-sdk) |
+| Smart Contract | Solidity (ERC-721 via OpenZeppelin)                                            |
+| Chain          | [Base](https://base.org/)                                                      |
 
-## 🛠️ Tech Stack
+## 📁 Project Structure
 
-- [Next.js](https://nextjs.org/)
-- [React](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-
-
-
-## 📦 Getting Started
-
-Follow these steps to set up the project locally:
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/sah-ban/gif
-cd gif
+```
+src/
+├── app/
+│   ├── .well-known/farcaster.json/  # Farcaster miniapp manifest
+│   ├── api/metadata/                # Dynamic NFT metadata endpoint
+│   ├── layout.tsx                   # Root layout with providers
+│   ├── page.tsx                     # Entry page with frame metadata
+│   ├── providers.tsx                # Client-side provider wrapper
+│   └── globals.css                  # Global styles
+├── components/
+│   ├── providers/WagmiProvider.tsx   # Wagmi + React Query config (Base chain)
+│   ├── Connect.tsx                  # Wallet connection button
+│   └── Main.tsx                     # Core mint UI & logic
+├── contracts/
+│   ├── contract.sol                 # Pfp ERC-721 smart contract
+│   └── abi.json                     # Contract ABI
+public/
+├── logo.png                         # App icon
+├── og.png                           # Open Graph image
+└── splash.png                       # Splash screen image
 ```
 
-### 2. Install Dependencies
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** ≥ 20.18.0
+- **Yarn** (or npm)
+
+### Installation
 
 ```bash
-yarn
+# Clone the repo
+git clone https://github.com/sah-ban/pfp-mint.git
+cd pfp-mint
+
+# Install dependencies
+yarn install
 ```
 
-### 3. Configure Environment Variables
+### Environment Variables
 
-- Rename the example environment file:
+Create a `.env` file in the project root:
 
-```bash
-mv example.env .env
+```env
+NEXT_PUBLIC_URL=https://your-domain.com
 ```
 
-- Generate a secure secret for `NEXTAUTH_SECRET`:
-
-```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
-- Replace the placeholder in `.env` with the generated value.
-
----
-
-## 💻 Run the Development Server
+### Development
 
 ```bash
 yarn dev
 ```
 
-The app will be available at `http://localhost:3000`.
+Open [http://localhost:3000](http://localhost:3000) — note that the full experience requires access from within a Farcaster client (e.g. Warpcast).
 
----
-
-## 🌐 Preview Locally with Ngrok
-
-To test your app on Farcaster:
-
-1. Start an ngrok tunnel:
+### Production Build
 
 ```bash
-ngrok http 3000
+yarn build
+yarn start
 ```
 
-2. Copy the provided ngrok URL and open it in the [Farcaster Developer Tools](https://farcaster.xyz/~/developers/mini-apps/preview).
+## 📜 Smart Contract
+
+| Detail       | Value                                        |
+| ------------ | -------------------------------------------- |
+| **Name**     | Farcaster PFP                                |
+| **Symbol**   | PFP                                          |
+| **Chain**    | Base                                         |
+| **Address**  | `0x994CdBEb0702D65232D84a6A419ce81788C287db` |
+| **Mint Fee** | 0.00036 ETH                                  |
+| **Token ID** | User's Farcaster FID                         |
+| **Standard** | ERC-721 (with URI Storage)                   |
+
+## 🔗 Links
+
+- **Miniapp** — [pfp.itscashless.com](https://pfp.itscashless.com)
+- **OpenSea** — [Collection on OpenSea](https://opensea.io/collection/farcaster-pfp)
+- **Contract** — [View on BaseScan](https://basescan.org/address/0x994CdBEb0702D65232D84a6A419ce81788C287db)
 
 ---
 
-
-## 🚀 Deploying the App
-
-### 1. Deploy to [Vercel](https://vercel.com/)
-
-- Create a new project by importing your GitHub repository.
-- During setup, add the following environment variable:
-
-```
-Key: NEXTAUTH_SECRET
-Value: <your-generated-secret>
-```
-
-- Click **Deploy**.
-
-### 2. Post-Deployment Steps
-
-- Go to your Vercel **Dashboard** and copy the live deployment URL.
-- Navigate to **Settings > Environment Variables**, and add the remaining variables from your `.env` file.
-- Save and redeploy if needed.
-
----
-
-## 🔗 Link Your Farcaster Account
-
-### 1. Register Your Domain
-
-- Go to [Farcaster Developer Tools](https://farcaster.xyz/~/developers/mini-apps).
-- Paste your Vercel deployment domain.
-- Untick **Include Example Definition**.
-- Copy the generated **Domain Manifest** (automatically copied to clipboard).
-
-### 2. Update the Domain Manifest in the Project
-
-- Open the following file:
-
-```tsx
-./src/app/.well-known/farcaster.json/route.ts
-```
-
-- Replace the `accountAssociation` object with the one from the manifest.
-- Commit and push your changes to deploy them.
-
----
-
-## ✅ You're All Set!
-
-Your Farcaster Mini App is now ready to go live 🚀
-
-For questions, feel free to reach out or open an issue in the [GitHub repo](https://github.com/sah-ban/gif/issues).
+Built by [@cashlessman.eth](https://farcaster.xyz/cashlessman.eth)
